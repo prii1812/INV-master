@@ -1,0 +1,199 @@
+{% extends 'partials/base.html' %}
+{% block title %}Login Page{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+/>
+<div class="container-fluid" style="background: linear-gradient( rgb(109, 172, 255), white);">
+  <div class="row mt-2 mb-2">
+    <div class="col-md-12 text-center">
+      <div class="card-body">
+        <marquee behavior="scroll" direction="left" scrollamount="20">
+            <h1 class="my-">WELCOME TO C-DAC INVENTORY MANAGEMENT SYSTEM </h1>
+        </marquee>
+      
+    </div>
+  </div>
+</div>
+
+</div>   
+
+<div class="row">
+  <div class="col-sm-8 " style="background-color: #d8efe5, #d8efe5;">
+    <p>
+      <canvas id="test-canvas" width="900" height="470"  background: white;"></canvas>
+    </p>
+  </div>
+
+
+<script>
+  // Get the canvas element
+  var canvas = document.getElementById("test-canvas");
+  
+  // Get the 2D drawing context
+  var context = canvas.getContext("2d");
+  
+  // Create an Image object
+  var image = new Image();
+  
+  // Set the source of the image
+  image.src = "media/login2.png"; // Replace "ligi.png" with the actual path to your image
+  
+  // Wait for the image to load
+  image.onload = function() {
+    // Draw the image on the canvas
+    context.drawImage(image, 0, 0); // You can adjust the position (0, 0) as per your requirement
+  };
+</script>
+
+
+      
+      
+
+  
+  <div class="col-sm-4">
+ 
+
+         {% if messages %}
+         {% for message in messages %}
+         <div class="alert alert-{{ message.tags }}">
+             {{ message }}
+         </div>
+         {% endfor %}
+         {% endif %}
+        <div class="mx-auto" style="width: 300px; bg-white">
+
+          
+          <center>
+            <img src="media/logo2.png" alt="Logo" width="100" style="float: left; margin-right: 10px;">
+            <h1 >LOGIN</h1>
+          </center>
+          
+          
+            
+             <br><br>
+             <form method="POST" onsubmit="return triggerFunction">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <a class="mx-4" href="{% url 'password_reset' %}">Forgot Password?</a><br>
+                
+                <br>
+                <div class="container">
+                  <div class="wrapper">
+                    <canvas id="canvas" width="200" height="40"></canvas>
+                    <button id="reload-button" class="btn btn-outline-primary btn-sm">
+                      <i class="fa-solid fa-arrow-rotate-right"></i>
+                    </button>
+                  </div><br>
+                  <input
+                    type="text"
+                    id="user-input"
+                    placeholder ="Verify Captcha"
+                  /><br><br>
+     <center> <input id="submit-button" class="btn btn-info btn-lg"  type="submit" value="LOGIN"  ></center> <br>
+     
+
+	
+		</form>
+  
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+
+   //Initial References
+let submitButton = document.getElementById("submit-button");
+let userInput = document.getElementById("user-input");
+let canvas = document.getElementById("canvas");
+let reloadButton = document.getElementById("reload-button");
+let text = "";
+
+//Generate Text
+const textGenerator = () => {
+  let generatedText = "";
+  /* String.fromCharCode gives ASCII value from a given number */
+  // total 9 letters hence loop of 3
+  for (let i = 0; i < 2; i++) {
+    //65-90 numbers are capital letters
+    generatedText += String.fromCharCode(randomNumber(65, 90));
+    //97-122 are small letters
+    generatedText += String.fromCharCode(randomNumber(97, 122));
+    //48-57 are numbers from 0-9
+    generatedText += String.fromCharCode(randomNumber(48, 57));
+  }
+  return generatedText;
+};
+
+//Generate random numbers between a given range
+const randomNumber = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
+//Canvas part
+function drawStringOnCanvas(string) {
+  //The getContext() function returns the drawing context that has all the drawing properties and functions needed to draw on canvas
+  let ctx = canvas.getContext("2d");
+  //clear canvas
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  //array of text color
+  const textColors = ["rgb(0,0,0)", "rgb(130,130,130)"];
+  //space between letters
+  const letterSpace = 150 / string.length;
+  //loop through string
+  for (let i = 0; i < string.length; i++) {
+    //Define initial space on X axis
+    const xInitialSpace = 25;
+    //Set font for canvas element
+    ctx.font = "20px Roboto Mono";
+    //set text color
+    ctx.fillStyle = textColors[randomNumber(0, 1)];
+    ctx.fillText(
+      string[i],
+      xInitialSpace + i * letterSpace,
+      randomNumber(25, 40),
+      100
+    );
+  }
+}
+
+//Initial Function
+function triggerFunction() {
+  //clear Input
+  userInput.value = "";
+  text = textGenerator();
+  console.log(text);
+  //Randomize the text so that everytime the position of numbers and small letters is random
+  text = [...text].sort(() => Math.random() - 0.5).join("");
+  drawStringOnCanvas(text);
+}
+
+//call triggerFunction for reload button
+reloadButton.addEventListener("click", triggerFunction);
+
+//call triggerFunction when page loads
+window.onload = () => triggerFunction();
+
+//When user submits the form
+document.querySelector('form').addEventListener('submit', function(event) {
+  //prevent the form from submitting
+  event.preventDefault();
+  //check if user input == generated text
+  if (userInput.value === text) {
+    alert("Success");
+    this.submit();
+  } else {
+    alert("Incorrect Captcha");
+    triggerFunction();
+  }
+});
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+       
+</div>
+{% endblock %}

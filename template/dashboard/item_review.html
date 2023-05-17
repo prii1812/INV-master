@@ -1,0 +1,28 @@
+{% extends 'partials/base.html' %}
+{% block title %}item review Page{% endblock %}
+{% block content %}
+{% include 'partials/topnav.html'%}
+{% load crispy_forms_tags %}
+<div class="row my-4">
+    <div class="col-md-6 offset-md-3">
+        <div class="border p-3 bg-white">
+            <h3>Status Review</h3>
+            <hr>
+            <form method="POST">
+                
+                {% csrf_token %}
+                {{ crispy }}
+                <div>
+                    <label>Status:</label>
+                    <select name="status">
+                        <option value="Accepted">Accepted</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <button type="submit">save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
